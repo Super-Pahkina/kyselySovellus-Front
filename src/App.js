@@ -1,11 +1,11 @@
-import HaeKysely from './components/HaeKysely'
+import React from 'react';
+import KyselyLista from './components/KyselyLista'
 
 function App() {
 
   return (
     <div>
-     <h1>Kysely:</h1>
-    <HaeKysely></HaeKysely>
+    <KyselyLista></KyselyLista>
     </div>
   );
 }
