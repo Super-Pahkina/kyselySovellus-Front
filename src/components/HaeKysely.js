@@ -17,12 +17,13 @@ function HaeKysely() {
 
     return (
         <div>
+            <form>
 
             {kysymykset.map(kysymys =>
                 <Kysymys key={kysymys.kysymys_id} kysymys={kysymys} />
             )}
             <button>SUBMIT</button>
-
+            </form>
         </div>
     )
 }
