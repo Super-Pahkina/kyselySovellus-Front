@@ -22,8 +22,10 @@ function KyselyLista() {
                     <a href="/">
                         {kysely.nimi}
                     </a>
+                    
                 </div>
             )}
+            
         </div>
     )
 
