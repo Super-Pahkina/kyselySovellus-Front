@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import KyselyLista from './KyselyLista';
 import Kysymys from './Kysymys'
+import axios from 'axios';
 
 function HaeKysely() {
 
@@ -52,8 +53,28 @@ function HaeKysely() {
     function mapToJson(vastauslista) {
         return JSON.stringify([...vastauslista]);
     }
+    const saveVastaus = (e) => {
+        e.preventDefault();
+        const formData = {
+        'syote': vastaus.syote,
+        'kysymys': vastaus.kysymys,
+        }
+        
+        axios.post(`http://kyselysovellus.herokuapp.com/vastaukset`, formData)
+        .then(response => {
+        if (response.status === 200) {
+        setValues( {syote: '', kysymys: ''} );
+        setViesti('Lisättiin');
+        } else {
+        setViesti('Lisäys ei onnistunut');
+        }
+        })
+     }
+        // Tässä on komponentin muu koodi ja form
+        
 
-    const saveVastaus = (vastaus) => {
+
+    /*const saveVastaus = (vastaus) => {
         fetch(`http://kyselysovellus.herokuapp.com/vastaukset`, {
             method: 'POST',
             headers: {
@@ -62,11 +83,11 @@ function HaeKysely() {
             body: JSON.stringify(vastaus)
         })
 
-            /*  .then(res => fetchData()) */
+            /*  .then(res => fetchData()) 
             .catch(err => console.error(err))
 
     }
-
+*/
     const saveVastaukset = (vastauslista) => {
         fetch(`http://kyselysovellus.herokuapp.com/vastaukset`, {
             method: 'POST',
