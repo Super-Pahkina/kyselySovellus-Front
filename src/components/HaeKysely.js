@@ -11,6 +11,9 @@ function HaeKysely() {
     const [indeksi, setIndeksi] = useState(0)
     const [vastaus, setVastaus] = useState({ syote: '', kysymys: {} })
     const [vastauslista, setVastauslista] = useState([])
+    const [viesti, setViesti] = useState('');
+    
+
 
 
     useEffect(() => { fetchData() });
@@ -53,17 +56,17 @@ function HaeKysely() {
     function mapToJson(vastauslista) {
         return JSON.stringify([...vastauslista]);
     }
-    const saveVastaus = (e) => {
-        e.preventDefault();
+    const saveVastaus = () => {
+        
         const formData = {
         'syote': vastaus.syote,
         'kysymys': vastaus.kysymys,
         }
         
-        axios.post(`http://kyselysovellus.herokuapp.com/vastaukset`, formData)
+        axios.post(`http://kyselysovellus.herokuapp.com/vastaus`, formData)
         .then(response => {
         if (response.status === 200) {
-        setValues( {syote: '', kysymys: ''} );
+        setVastaus( {syote: '', kysymys: ''} );
         setViesti('Lisättiin');
         } else {
         setViesti('Lisäys ei onnistunut');
@@ -88,7 +91,7 @@ function HaeKysely() {
 
     }
 */
-    const saveVastaukset = (vastauslista) => {
+    /*const saveVastaukset = (vastauslista) => {
         fetch(`http://kyselysovellus.herokuapp.com/vastaukset`, {
             method: 'POST',
             headers: {
@@ -99,11 +102,11 @@ function HaeKysely() {
             //JSON.stringify(vastauslista)
         })
 
-            /*  .then(res => fetchData()) */
+            /*  .then(res => fetchData()) 
             .catch(err => console.error(err))
 
     }
-
+*/
 
 
     if (indeksi === kysymykset.length) {
@@ -114,7 +117,7 @@ function HaeKysely() {
                 <div>
                     {vastauslista.map(vastaus => <p key={indeksi}>{vastaus.teksti}</p>)}
                 </div>
-                <button onClick={saveVastaukset}>Lopeta ja tallenna</button>
+                <button >Lopeta ja tallenna</button>
             </div>
         )
     } else {
