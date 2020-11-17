@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import KyselyLista from './KyselyLista';
 import Kysymys from './Kysymys'
 
 function HaeKysely() {
-    
+
     const [kysymykset, setKysymykset] = useState([])
     const [kyselyid, setKyselyid] = useState(1)
 
     const [indeksi, setIndeksi] = useState(0)
-    const [vastaus, setVastaus] = useState({ teksti: '', kysymys: {} })
+    const [vastaus, setVastaus] = useState({ syote: '', kysymys: {} })
     const [vastauslista, setVastauslista] = useState([])
 
 
@@ -23,16 +24,23 @@ function HaeKysely() {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        const uusiLista = vastauslista.concat(vastaus)
+        saveVastaus(vastaus)
+        //saveVastaukset()
+        /*const uusiLista = vastauslista.concat(vastaus)
         setVastauslista(uusiLista)
-        setVastaus({ teksti: '', kysymys: {} })
+        setVastaus({ syote: '', kysymys: {} })
+        handleIndeksi()*/
+        setVastaus({ syote: '', kysymys: {} })
         handleIndeksi()
     }
 
     const handleVastausChange = (event) => {
         const vastauksenKysymys = JSON.stringify(kysymykset[indeksi])
-        setVastaus({ teksti: event.target.value, kysymys: vastauksenKysymys })
+        setVastaus({ syote: event.target.value, kysymys: vastauksenKysymys })
         console.log(vastaus)
+
+        /* setCar({...car, [event.target.name]: event.target.value});*/
+
 
     }
 
@@ -41,12 +49,40 @@ function HaeKysely() {
         setIndeksi(indeksi + 1)
     }
 
-    const tallennaVastaukset =()=> {
-        console.log("tähän tehään db tallennus")
-        return(
-            <div></div>
-        )
+    function mapToJson(vastauslista) {
+        return JSON.stringify([...vastauslista]);
     }
+
+    const saveVastaus = (vastaus) => {
+        fetch(`http://kyselysovellus.herokuapp.com/vastaukset`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(vastaus)
+        })
+
+            /*  .then(res => fetchData()) */
+            .catch(err => console.error(err))
+
+    }
+
+    const saveVastaukset = (vastauslista) => {
+        fetch(`http://kyselysovellus.herokuapp.com/vastaukset`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: mapToJson()
+
+            //JSON.stringify(vastauslista)
+        })
+
+            /*  .then(res => fetchData()) */
+            .catch(err => console.error(err))
+
+    }
+
 
 
     if (indeksi === kysymykset.length) {
@@ -57,7 +93,7 @@ function HaeKysely() {
                 <div>
                     {vastauslista.map(vastaus => <p key={indeksi}>{vastaus.teksti}</p>)}
                 </div>
-                <button onClick={tallennaVastaukset()}>Lopeta ja tallenna</button>
+                <button onClick={saveVastaukset}>Lopeta ja tallenna</button>
             </div>
         )
     } else {
