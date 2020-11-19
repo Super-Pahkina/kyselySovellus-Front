@@ -12,7 +12,7 @@ function HaeKysely() {
     const [vastaus, setVastaus] = useState({ syote: '', kysymys: {} })
     const [vastauslista, setVastauslista] = useState([])
     const [viesti, setViesti] = useState('');
-    
+
 
 
 
@@ -28,6 +28,8 @@ function HaeKysely() {
 
     const handleSubmit = (event) => {
         event.preventDefault()
+        const uusiLista = vastauslista.concat(vastaus)
+        setVastauslista(uusiLista)
         saveVastaus(vastaus)
         //saveVastaukset()
         /*const uusiLista = vastauslista.concat(vastaus)
@@ -43,8 +45,6 @@ function HaeKysely() {
         setVastaus({ syote: event.target.value, kysymys: kysymykset[indeksi] })
         console.log(vastaus)
 
-        /* setCar({...car, [event.target.name]: event.target.value});*/
-
 
     }
 
@@ -54,24 +54,26 @@ function HaeKysely() {
     }
 
     const saveVastaus = () => {
-        
+
         const formData = {
-        'syote': vastaus.syote,
-        'kysymys': vastaus.kysymys,
+            'syote': vastaus.syote,
+            'kysymys': vastaus.kysymys,
         }
-        
+
         axios.post(`http://kyselysovellus.herokuapp.com/vastaus`, formData)
-        .then(response => {
-        if (response.status === 200) {
-        setVastaus( {syote: '', kysymys: ''} );
-        setViesti('Lisättiin');
-        } else {
-        setViesti('Lisäys ei onnistunut');
-        }
-        })
-     }
-        // Tässä on komponentin muu koodi ja form
-        
+            .then(response => {
+                if (response.status === 200) {
+                    setVastaus({ syote: '', kysymys: '' });
+                    setViesti('Lisättiin');
+
+                } else {
+                    setViesti('Lisäys ei onnistunut');
+                }
+                console.log(viesti);
+            })
+    }
+    // Tässä on komponentin muu koodi ja form
+
 
 
     /*const saveVastaus = (vastaus) => {
@@ -112,8 +114,13 @@ function HaeKysely() {
                 <h1>kiitti tästä</h1>
                 <p>sun vastaukset</p>
                 <div>
-                    {vastauslista.map(vastaus => <p key={indeksi}>{vastaus.teksti}</p>)}
-                </div>
+                    { }
+                    {vastauslista.map(vastaus =>
+                        <div>
+                            <p>{vastaus.kysymys.teksti}</p>
+                            <p key={indeksi}>{vastaus.syote}</p>
+                        </div>
+                    )}</div>
                 <button >Lopeta ja tallenna</button>
             </div>
         )
