@@ -16,7 +16,7 @@ function HaeKysely() {
 
 
 
-    useEffect(() => { fetchData() });
+    useEffect(() => { fetchData() }, []);
 
     let kysymys_url = `http://kyselysovellus.herokuapp.com/kyselyt/${kyselyid}/kysymykset`
 
@@ -39,8 +39,8 @@ function HaeKysely() {
     }
 
     const handleVastausChange = (event) => {
-        const vastauksenKysymys = JSON.stringify(kysymykset[indeksi])
-        setVastaus({ syote: event.target.value, kysymys: vastauksenKysymys })
+        //const vastauksenKysymys = JSON.stringify(kysymykset[indeksi])
+        setVastaus({ syote: event.target.value, kysymys: kysymykset[indeksi] })
         console.log(vastaus)
 
         /* setCar({...car, [event.target.name]: event.target.value});*/
@@ -53,9 +53,6 @@ function HaeKysely() {
         setIndeksi(indeksi + 1)
     }
 
-    function mapToJson(vastauslista) {
-        return JSON.stringify([...vastauslista]);
-    }
     const saveVastaus = () => {
         
         const formData = {
