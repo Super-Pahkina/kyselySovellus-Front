@@ -1,26 +1,57 @@
 import React, { useState } from 'react';
 
-function Kysymys({ kysymys, value, handleVastausChange }) {
+function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleCheckboxChange}) {
 
     if (kysymys.tyyppi === "teksti") {
         return (
             <div>
-                <p></p>{kysymys.teksti} <br></br>
-                <textarea
-                    id="text"
-                    type="text"
-                    value={value}
-                    onChange={handleVastausChange}
-                ></textarea>
+                <form onSubmit={handleSubmit}>
+                    <p></p>{kysymys.teksti} <br></br>
+                    <textarea
+                        id="text"
+                        type="text"
+                        value={value}
+                        onChange={handleVastausChange}
+                    ></textarea> <br></br>
+                    <button type="submit">JATKA</button>
+                </form>
 
-            </div>
+            </div >
 
         )
-    } else {
+    } else if (kysymys.tyyppi === "checkbox") {
+
         return (
-            <div></div>
+            <div>
+                <form onSubmit={handleSubmit}>
+
+                    <p></p>{kysymys.teksti} <br></br>
+                    {kysymys.monivalinta.map(m =>
+                        <label>
+                            <input type="checkbox" id={m} name="checkbox" value={m} onChange={handleCheckboxChange}></input>
+                            {m}<br></br>
+                        </label>
+                    )}
+                    <button type="submit">JATKA</button>
+                </form>
+            </div>
         )
 
+    } else if (kysymys.tyyppi === "radionappula") {
+        return (
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <p></p>{kysymys.teksti} <br></br>
+                    {kysymys.monivalinta.map(m =>
+                        <label>
+                            <input type="radio" id={m} name={m} value={m}></input>
+                            {m}<br></br>
+                        </label>
+                    )}
+                    <button type="submit">JATKA</button>
+                </form>
+            </div>
+        )
     }
 
     /*const [vastaus, setVastaus] = useState({ teksti: '', kysymys:'' })
