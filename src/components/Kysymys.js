@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 
 function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleCheckboxChange}) {
 
+    //const[checked, setChecked] = useState(false)
+    //let checkedItems= new Map()
+
     if (kysymys.tyyppi === "teksti") {
         return (
             <div>
@@ -20,15 +23,14 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
 
         )
     } else if (kysymys.tyyppi === "checkbox") {
-
         return (
             <div>
                 <form onSubmit={handleSubmit}>
 
                     <p></p>{kysymys.teksti} <br></br>
-                    {kysymys.monivalinta.map(m =>
+                    {kysymys.monivalinta.map((m,i) =>
                         <label>
-                            <input type="checkbox" id={m} name="checkbox" value={m} onChange={handleCheckboxChange}></input>
+                            <input type="checkbox" id={i} name="checkbox" value={m} onChange={handleCheckboxChange}></input>
                             {m}<br></br>
                         </label>
                     )}

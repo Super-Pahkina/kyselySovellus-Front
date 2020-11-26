@@ -6,18 +6,14 @@ import axios from 'axios';
 function HaeKysely() {
 
     const [kysymykset, setKysymykset] = useState([])
-    const [kyselyid, setKyselyid] = useState(1)
+    const [kyselyid, setKyselyid] = useState(17)
 
     const [indeksi, setIndeksi] = useState(0)
     const [vastaus, setVastaus] = useState({ syote: '', kysymys: {} })
-    const [monivalintaVastaus, setMonivalintaVastaus] = useState({syote:[], kysymys: {}})
+    const [monivalintaVastaus, setMonivalintaVastaus] = useState({ checkbox: [], kysymys: {} })
 
     const [vastauslista, setVastauslista] = useState([])
     const [viesti, setViesti] = useState('');
-    
-    const [checked, setChecked]= useState(false)
-
-
 
 
     useEffect(() => { fetchData() }, []);
@@ -31,15 +27,21 @@ function HaeKysely() {
     };
 
     const handleSubmit = (event) => {
-        const target = event.target
-        console.log(target.type)
-
         event.preventDefault()
-        const uusiLista = vastauslista.concat(vastaus)
-        setVastauslista(uusiLista)
+        if (kysymykset[indeksi].tyyppi === "teksti") {
+            const uusiLista = vastauslista.concat(vastaus)
+            setVastauslista(uusiLista)
+            saveVastaus(vastaus)
 
-        saveVastaus(vastaus)
+        } else if(kysymykset[indeksi].tyyppi === "checkbox") {
+            const uusiLista = vastauslista.concat(monivalintaVastaus)
+            setVastauslista(uusiLista)
+            saveMonivalintaVastaus(monivalintaVastaus)
+        }
+
+
         setVastaus({ syote: '', kysymys: {} })
+        setMonivalintaVastaus({checkbox:[], kysymys: {}})
         handleIndeksi()
     }
 
@@ -48,19 +50,20 @@ function HaeKysely() {
         console.log(vastaus)
     }
 
-    const handleCheckboxChange=(event)=> {
-        let lista = event.target.name
-        console.log(lista)
-        //let lista = [...monivalintaVastaus.syote, event.target.id]
-        //setMonivalintaVastaus({syote:lista, kysymys: kysymykset[indeksi]})
-        //const target = event.target;
-        //const value = target.type === 'checkbox' ? target.checked : target.value;
-        //const name = target.name
-        //setChecked(value)
-    
-        //const uusiLista = monivalinta.concat(value)
-        //setMonivalinta(uusiLista)
-
+    const handleCheckboxChange = (event) => {
+        let isChecked = event.target.checked
+        if (isChecked) {
+            let lista = monivalintaVastaus.checkbox
+            lista.push(event.target.value)
+            setMonivalintaVastaus({ checkbox: lista, kysymys: kysymykset[indeksi] })
+        } else if (!isChecked) {
+            let lista = monivalintaVastaus.checkbox
+            let poistolista = lista.filter(f => f !== event.target.value)
+            setMonivalintaVastaus({ checkbox: poistolista, kysymys: kysymykset[indeksi] })
+        }
+        console.log(isChecked)
+        console.log(event.target.value)
+        console.log("MONIVALINNAT", JSON.stringify(monivalintaVastaus))
     }
 
     const handleIndeksi = () => {
@@ -88,41 +91,25 @@ function HaeKysely() {
             })
     }
 
-   
-    // Tässä on komponentin muu koodi ja form
+    const saveMonivalintaVastaus = () => {
 
+        const formData = {
+            'checkbox': monivalintaVastaus.checkbox,
+            'kysymys': monivalintaVastaus.kysymys,
+        }
 
+        axios.post(`http://kyselysovellus.herokuapp.com/kyselyt/${kyselyid}/kysymykset/${monivalintaVastaus.kysymys.kysymys_id}/vastaus`, formData)
+            .then(response => {
+                if (response.status === 200) {
+                    setVastaus({ syote: '', kysymys: '' });
+                    setViesti('Lisättiin');
 
-    /*const saveVastaus = (vastaus) => {
-        fetch(`http://kyselysovellus.herokuapp.com/vastaukset`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(vastaus)
-        })
-
-            /*  .then(res => fetchData()) 
-            .catch(err => console.error(err))
-
+                } else {
+                    setViesti('Lisäys ei onnistunut');
+                }
+                console.log(viesti);
+            })
     }
-*/
-    /*const saveVastaukset = (vastauslista) => {
-        fetch(`http://kyselysovellus.herokuapp.com/vastaukset`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: mapToJson()
-
-            //JSON.stringify(vastauslista)
-        })
-
-            /*  .then(res => fetchData()) 
-            .catch(err => console.error(err))
-
-    }
-*/
 
 
     if (indeksi === kysymykset.length) {
@@ -132,10 +119,10 @@ function HaeKysely() {
                 <p>sun vastaukset</p>
                 <div>
                     { }
-                    {vastauslista.map(vastaus =>
+                    {vastauslista.map((vastaus,i) =>
                         <div>
                             <p>{vastaus.kysymys.teksti}</p>
-                            <p key={indeksi}>{vastaus.syote}</p>
+                            <p key={i}>{vastaus.syote}</p>
                         </div>
                     )}</div>
                 <button>Lopeta</button>
@@ -149,9 +136,9 @@ function HaeKysely() {
                 <h1>{kysymykset[0].kysely.nimi}</h1>
                 <h2>{kysymykset[0].kysely.kuvaus}</h2>
                 <p>Tämä on {indeksi + 1} / {kysymykset.length} kysymys</p>
-               
-                    <Kysymys kysymys={kysymykset[indeksi]} value={vastaus.syote} handleSubmit={handleSubmit} handleCheckboxChange={handleCheckboxChange} handleVastausChange={handleVastausChange}></Kysymys>
-               
+
+                <Kysymys kysymys={kysymykset[indeksi]} value={vastaus.syote} handleSubmit={handleSubmit} handleCheckboxChange={handleCheckboxChange} handleVastausChange={handleVastausChange}></Kysymys>
+
             </div>
         )
     }
@@ -159,4 +146,5 @@ function HaeKysely() {
 }
 
 export default HaeKysely;
+
 
