@@ -3,10 +3,10 @@ import KyselyLista from './KyselyLista';
 import Kysymys from './Kysymys'
 import axios from 'axios';
 
-function HaeKysely() {
+function HaeKysely(props) {
 
     const [kysymykset, setKysymykset] = useState([])
-    const [kyselyid, setKyselyid] = useState(17)
+    const [kyselyid, setKyselyid] = useState(props.kysely_id)
 
     const [indeksi, setIndeksi] = useState(0)
     const [vastaus, setVastaus] = useState({ syote: '', kysymys: {} })
@@ -118,7 +118,6 @@ function HaeKysely() {
                 <h1>kiitti tästä</h1>
                 <p>sun vastaukset</p>
                 <div>
-                    { }
                     {vastauslista.map((vastaus,i) =>
                         <div>
                             <p>{vastaus.kysymys.teksti}</p>
