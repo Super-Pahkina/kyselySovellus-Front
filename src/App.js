@@ -6,11 +6,13 @@ import Tulosraportti from './components/Tulosraportti';
 import { Button } from '@material-ui/core';
 //import { Link } from 'react-router';
 import { BrowserRouter, Switch, Link, Route } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'
 
 function App() {
 
 
   const [kyselyt, setKyselyt] = useState([])
+  const [kyselynyt, setKyselyNyt] = useState({})
 
   let kysely_url = 'http://kyselysovellus.herokuapp.com/kyselyt'
 
@@ -32,6 +34,7 @@ function App() {
           <Route path='/Listaa' component={ DrawerMUI } />
       </Switch></div>*/
 
+   
 
   return (
     <BrowserRouter>
@@ -50,7 +53,7 @@ function App() {
             <Switch>
 
               <Route path="/vastaa" render={(props) => <HaeKysely {...props} kysely_id={kysely.kysely_id}></HaeKysely>}></Route>
-              <Route path="/tulokset" render={(props)=> <Tulosraportti {...props} kysely_id={kysely.kysely_id}></Tulosraportti>}></Route>
+              <Route path="/tulokset" render={(props) => <Tulosraportti {...props} kysely_id={kysely.kysely_id}></Tulosraportti>}></Route>
 
             </Switch>
 
@@ -61,9 +64,10 @@ function App() {
         )}
 
       </div>
-      
+
     </BrowserRouter>
   )
+
 
 }
 

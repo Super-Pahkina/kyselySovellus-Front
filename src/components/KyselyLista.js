@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 
 function KyselyLista() {
-    const [kyselyt, setKyselyt] = useState([])
+    /*const [kyselyt, setKyselyt] = useState([])
 
     let kysely_url = 'http://kyselysovellus.herokuapp.com/kyselyt'
 
@@ -12,7 +12,7 @@ function KyselyLista() {
             .then(data => setKyselyt(data))
     };
 
-    useEffect(() => { fetchData(); }, []);
+    useEffect(() => { fetchData(); }, []);*/
 
 
     /*<MenuMUI />
@@ -25,34 +25,38 @@ function KyselyLista() {
         </Switch></div>*/
 
 
-    return (
-        <BrowserRouter>
-        <div>
-            <h1>Kaikki kyselyt</h1>
-            {kyselyt.map(kysely =>
-            
-                <table>
-                    <tr>
-                        <td><h3>{kysely.nimi}</h3></td>
-                        <td><Button><Link to="/vastaa">VASTAA</Link></Button></td>
-                        <td><Button><Link to="/tulokset">TULOKSET</Link></Button></td>
-                   
-                    </tr>
-                    <Switch>
-                        
-                        <Route path="/vastaa" render={(props) => <haeKysely {...props} kysely_id={kysely.kysely_id}></haeKysely>}></Route>
-                        <Route path="/tulokset" component={Tulosraportti}></Route>
-                    
-                    </Switch>
-   
 
-                    
-                </table>
-               
-            )}
-            
+    return (
+        <div>
+         
         </div>
-        </BrowserRouter>
+        /* <BrowserRouter>
+         <div>
+             <h1>Kaikki kyselyt</h1>
+             {kyselyt.map(kysely =>
+             
+                 <table>
+                     <tr>
+                         <td><h3>{kysely.nimi}</h3></td>
+                         <td><Button><Link to="/vastaa">VASTAA</Link></Button></td>
+                         <td><Button><Link to="/tulokset">TULOKSET</Link></Button></td>
+                    
+                     </tr>
+                     <Switch>
+                         
+                         <Route path="/vastaa" render={(props) => <haeKysely {...props} kysely_id={kysely.kysely_id}></haeKysely>}></Route>
+                         <Route path="/tulokset" component={Tulosraportti}></Route>
+                     
+                     </Switch>
+    
+ 
+                     
+                 </table>
+                
+             )}
+             
+         </div>
+         </BrowserRouter>*/
     )
 
 }

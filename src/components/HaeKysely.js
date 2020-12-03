@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import KyselyLista from './KyselyLista';
 import Kysymys from './Kysymys'
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function HaeKysely(props) {
 
@@ -124,7 +125,7 @@ function HaeKysely(props) {
                             <p key={i}>{vastaus.syote}</p>
                         </div>
                     )}</div>
-                <button>Lopeta</button>
+                <button><Link>Lopeta</Link></button>
             </div>
         )
     } else {

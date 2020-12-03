@@ -35,9 +35,21 @@ function Tulosraportti(props) {
 
                         if (vastaus.kysymys.kysymys_id === kysymys.kysymys_id) {
                             console.log(vastaus.syote);
-                            return (
-                                <p key={indeksi}>{vastaus.syote}</p>
-                            )
+                            if(vastaus.kysymys.tyyppi === "teksti" || vastaus.kysymys.tyyppi === "radionappula") {
+                                return (
+                                    <p key={indeksi}>{vastaus.syote}</p>
+                                )
+                            } else{
+                                return(
+                                    <div>
+                                        {vastaus.checkbox.map(valinta => 
+                                            <p>{valinta}</p>
+                                            )}
+                                        </div>
+                                )
+
+                            }
+                           
 
                         }
                     }
