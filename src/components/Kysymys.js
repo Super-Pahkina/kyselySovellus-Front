@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 
 function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleCheckboxChange, handleRadionappulaChange}) {
 
-    //const[checked, setChecked] = useState(false)
-    //let checkedItems= new Map()
 
     if (kysymys.tyyppi === "teksti") {
         return (
@@ -29,8 +27,8 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
 
                     <p></p>{kysymys.teksti} <br></br>
                     {kysymys.monivalinta.map((m,i) =>
-                        <label>
-                            <input type="checkbox" id={i} name="checkbox" value={m} onChange={handleCheckboxChange}></input>
+                        <label key={i+100}>
+                            <input type="checkbox" id={i} name="checkbox" value={m} onClick={handleCheckboxChange}></input>
                             {m}<br></br>
                         </label>
                     )}
@@ -44,9 +42,9 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
             <div>
                 <form onSubmit={handleSubmit}>
                     <p></p>{kysymys.teksti} <br></br>
-                    {kysymys.monivalinta.map(m =>
-                        <label>
-                            <input type="radio" id={m} name="radionappula" value={m} onClick={()=>handleRadionappulaChange}></input>
+                    {kysymys.monivalinta.map((m,i) =>
+                        <label key={i}>
+                            <input type="radio" id={m} name="radionappula" value={m} onClick={handleRadionappulaChange}></input>
                             {m}<br></br>
                         </label>
                     )}
@@ -117,8 +115,3 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
 }
 
 export default Kysymys;
-
-/*
-<h1>{kysymykset[0].kysely.nimi}</h1>
-            <p><strong>{kysymykset[0].kysely.kuvaus}</strong></p>
-            */
