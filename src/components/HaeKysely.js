@@ -125,7 +125,8 @@ function HaeKysely(props) {
                             <p key={i}>{vastaus.syote}</p>
                         </div>
                     )}</div>
-                <button><Link>Lopeta</Link></button>
+                    <h3>SULJE SELAIN PLIIS</h3>
+                <button>Lopeta</button>
             </div>
         )
     } else {

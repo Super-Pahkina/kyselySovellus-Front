@@ -11,7 +11,7 @@ function Tulosraportti(props) {
     const vastaus_url = `http://kyselysovellus.herokuapp.com/kyselyt/${kysely_id}/vastaukset`
     const kysymys_url = `http://kyselysovellus.herokuapp.com/kyselyt/${kysely_id}/kysymykset`
 
-    useEffect(() => { fetchData() }, []);
+    useEffect(() => { fetchData() });
 
     const fetchData = () => {
 
@@ -20,12 +20,13 @@ function Tulosraportti(props) {
 
         axios.get(kysymys_url)
             .then(response => setKysymyslista(response.data))
-        console.log("LISTA", kysymysLista)
+        console.log("LISTA", JSON.stringify(kysymysLista[0]))
         console.log("DATA", data)
     }
 
     return (
         <div>
+           <p></p>
 
             <h2>vastaukset:</h2>
             {kysymysLista.map((kysymys, index) =>
