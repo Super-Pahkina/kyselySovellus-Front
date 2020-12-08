@@ -34,15 +34,21 @@ function HaeKysely(props) {
             setVastauslista(uusiLista)
             saveVastaus(vastaus)
 
-        } else if(kysymykset[indeksi].tyyppi === "checkbox") {
+        } else if (kysymykset[indeksi].tyyppi === "checkbox") {
             const uusiLista = vastauslista.concat(monivalintaVastaus)
             setVastauslista(uusiLista)
             saveMonivalintaVastaus(monivalintaVastaus)
+
+
+        } else if (kysymykset[indeksi].tyyppi === "radionappula") {
+            const uusiLista = vastauslista.concat(vastaus)
+            setVastauslista(uusiLista)
+            saveVastaus(vastaus)
         }
 
 
         setVastaus({ syote: '', kysymys: {} })
-        setMonivalintaVastaus({checkbox:[], kysymys: {}})
+        setMonivalintaVastaus({ checkbox: [], kysymys: {} })
         handleIndeksi()
     }
 
@@ -65,6 +71,23 @@ function HaeKysely(props) {
         console.log(isChecked)
         console.log(event.target.value)
         console.log("MONIVALINNAT", JSON.stringify(monivalintaVastaus))
+
+    }
+
+    const handleRadionappulaChange = (event) => {
+        let isChecked = event.target.checked
+        if (isChecked) {
+            //let lista = monivalintaVastaus.checkbox
+            //lista.push(event.target.value)
+            setVastaus({ syote: event.target.value, kysymys: kysymykset[indeksi] })
+        } else if (!isChecked) {
+            //let lista = monivalintaVastaus.checkbox
+            //let poistolista = lista.filter(f => f !== event.target.value)
+            setVastaus({ syote: "", kysymys: kysymykset[indeksi] })
+        }
+        console.log(isChecked)
+        console.log(event.target.value)
+        console.log("VASTAUS", JSON.stringify(vastaus))
     }
 
     const handleIndeksi = () => {
@@ -119,13 +142,13 @@ function HaeKysely(props) {
                 <h1>kiitti tästä</h1>
                 <p>sun vastaukset</p>
                 <div>
-                    {vastauslista.map((vastaus,i) =>
+                    {vastauslista.map((vastaus, i) =>
                         <div>
                             <p>{vastaus.kysymys.teksti}</p>
                             <p key={i}>{vastaus.syote}</p>
                         </div>
                     )}</div>
-                    <h3>SULJE SELAIN PLIIS</h3>
+                <h3>SULJE SELAIN PLIIS</h3>
                 <button>Lopeta</button>
             </div>
         )
@@ -138,7 +161,7 @@ function HaeKysely(props) {
                 <h2>{kysymykset[0].kysely.kuvaus}</h2>
                 <p>Tämä on {indeksi + 1} / {kysymykset.length} kysymys</p>
 
-                <Kysymys kysymys={kysymykset[indeksi]} value={vastaus.syote} handleSubmit={handleSubmit} handleCheckboxChange={handleCheckboxChange} handleVastausChange={handleVastausChange}></Kysymys>
+                <Kysymys kysymys={kysymykset[indeksi]} value={vastaus.syote} handleSubmit={handleSubmit} handleRadionappulaChange={handleRadionappulaChange} handleCheckboxChange={handleCheckboxChange} handleVastausChange={handleVastausChange}></Kysymys>
 
             </div>
         )

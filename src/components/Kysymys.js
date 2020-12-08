@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleCheckboxChange}) {
+function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleCheckboxChange, handleRadionappulaChange}) {
 
     //const[checked, setChecked] = useState(false)
     //let checkedItems= new Map()
@@ -46,7 +46,7 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
                     <p></p>{kysymys.teksti} <br></br>
                     {kysymys.monivalinta.map(m =>
                         <label>
-                            <input type="radio" id={m} name={m} value={m}></input>
+                            <input type="radio" id={m} name="radionappula" value={m} onClick={()=>handleRadionappulaChange}></input>
                             {m}<br></br>
                         </label>
                     )}
