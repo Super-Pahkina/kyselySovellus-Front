@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import KyselyLista from './KyselyLista';
 import Kysymys from './Kysymys'
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 function HaeKysely(props) {
 
     const [kysymykset, setKysymykset] = useState([])
-    const [kyselyid, setKyselyid] = useState(props.kysely_id)
-
-    const [indeksi, setIndeksi] = useState(0)
-    const [vastaus, setVastaus] = useState({ syote: '', kysymys: {} })
+    const [indeksi, setIndeksi] = useState(0) 
+    const [vastaus, setVastaus] = useState({ syote: '', kysymys: {} }) 
     const [monivalintaVastaus, setMonivalintaVastaus] = useState({ checkbox: [], kysymys: {} })
-
     const [vastauslista, setVastauslista] = useState([])
     const [viesti, setViesti] = useState('');
-    //const [checked, setChecked] = useState('');
-
+    const kyselyid = props.kysely_id
 
     useEffect(() => { fetchData() }, []);
 
@@ -30,9 +24,6 @@ function HaeKysely(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-
-        
-
         if (kysymykset[indeksi].tyyppi === "teksti") {
             
             const uusiLista = vastauslista.concat(vastaus)
@@ -84,8 +75,6 @@ function HaeKysely(props) {
         if (isChecked) {
             setVastaus({ syote: event.target.value, kysymys: kysymykset[indeksi] })
         } else if (!isChecked) {
-            //let lista = monivalintaVastaus.checkbox
-            //let poistolista = lista.filter(f => f !== event.target.value)
             setVastaus({ syote: "", kysymys: kysymykset[indeksi] })
         }
         console.log(isChecked)
@@ -174,11 +163,9 @@ function HaeKysely(props) {
 
         return (
             <div>
-
                 <h1>{kysymykset[0].kysely.nimi}</h1>
                 <h2>{kysymykset[0].kysely.kuvaus}</h2>
                 <p>Tämä on {indeksi + 1} / {kysymykset.length} kysymys</p>
-
                 <Kysymys kysymys={kysymykset[indeksi]} value={vastaus.syote} handleSubmit={handleSubmit} handleRadionappulaChange={handleRadionappulaChange} handleCheckboxChange={handleCheckboxChange} handleVastausChange={handleVastausChange}></Kysymys>
 
             </div>
