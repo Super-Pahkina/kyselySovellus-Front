@@ -1,15 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import Kysymys from './Kysymys'
 import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
 
+const useStyles = makeStyles({
+    div: {
+        marginLeft: 20
+    },
+    button: {
+        padding: 10,
+        background: 'white',
+        margin: 5,
+        color: 'black',
+        boxShadow: '0 5px 10px 5px rgba(100, 1, 100, .3)',
+        '&:hover': {
+            background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 50%)',
+
+            color: '#FFF'
+        }
+    }
+        });
 function HaeKysely(props) {
-
+    const classes = useStyles();
     const [kysymykset, setKysymykset] = useState([])
-    const [indeksi, setIndeksi] = useState(0) 
-    const [vastaus, setVastaus] = useState({ syote: '', kysymys: {} }) 
+    const [indeksi, setIndeksi] = useState(0)
+    const [vastaus, setVastaus] = useState({ syote: '', kysymys: {} })
     const [monivalintaVastaus, setMonivalintaVastaus] = useState({ checkbox: [], kysymys: {} })
     const [vastauslista, setVastauslista] = useState([])
     const [viesti, setViesti] = useState('');
+    const [virhe, setVirhe] = useState('');
     const kyselyid = props.kysely_id
 
     useEffect(() => { fetchData() }, []);
@@ -25,27 +45,45 @@ function HaeKysely(props) {
     const handleSubmit = (event) => {
         event.preventDefault()
         if (kysymykset[indeksi].tyyppi === "teksti") {
-            
+            if(vastaus.syote.length === 0){
+                setVirhe('Vastaus ei voi olla tyhjä!');
+               
+            }else{
             const uusiLista = vastauslista.concat(vastaus)
             setVastauslista(uusiLista)
             saveVastaus(vastaus)
-
+            setVirhe('');
+            setVastaus({ syote: '', kysymys: {} })
+            handleIndeksi()
+            }
         } else if (kysymykset[indeksi].tyyppi === "checkbox") {
+           if(monivalintaVastaus.checkbox.length === 0) {
+            setVirhe('Vastaus ei voi olla tyhjä!');
+           } else {
             const uusiLista = vastauslista.concat(monivalintaVastaus)
             setVastauslista(uusiLista)
             saveMonivalintaVastaus(monivalintaVastaus)
+            setVirhe('');
+            setMonivalintaVastaus({ checkbox: [], kysymys: {} })
+            handleIndeksi()
+           }
+           
 
 
         } else if (kysymykset[indeksi].tyyppi === "radionappula") {
+           if(vastaus.syote.length === 0) {
+            setVirhe('Vastaus ei voi olla tyhjä!');
+           }else{
             const uusiLista = vastauslista.concat(vastaus)
             setVastauslista(uusiLista)
             saveVastaus(vastaus)
+            setVirhe('');
+            setVastaus({ syote: '', kysymys: {} })
+            handleIndeksi()
         }
-
-        setVastaus({ syote: '', kysymys: {} })
-        setMonivalintaVastaus({ checkbox: [], kysymys: {} })
-        handleIndeksi()
+    }
         
+
     }
 
     const handleVastausChange = (event) => {
@@ -131,43 +169,44 @@ function HaeKysely(props) {
 
     if (indeksi === kysymykset.length) {
         return (
-            <div>
-                <h1>kiitti tästä</h1>
-                <p>sun vastaukset</p>
+            <div className={classes.div}>
+                <h1>Kiitos kyselyyn vastaamisesta!</h1>
+                <h3>Vastauksesi</h3>
                 <div>
                     {vastauslista.map((vastaus, i) => {
                         if (vastaus.kysymys.tyyppi === "teksti" || vastaus.kysymys.tyyppi === "radionappula") {
                             return (
                                 <div>
-                                    <p>{vastaus.kysymys.teksti}</p>
+                                    <b>{vastaus.kysymys.teksti}</b>
                                     <p key={i}>{vastaus.syote}</p>
                                 </div>)
-                        } else{
+                        } else {
                             return (
                                 <div>
-                                    <p>{vastaus.kysymys.teksti}</p>
-                                    {vastaus.checkbox.map(valinta => 
-                                            <p>{valinta}</p>
-                                            )}
+                                    <b>{vastaus.kysymys.teksti}</b>
+                                    {vastaus.checkbox.map(valinta =>
+                                        <p>{valinta}</p>
+                                    )}
                                 </div>)
+
 
                         }
 
+
                     }
 
-
-                    )}</div>
+                    )} <Button className={classes.button} a href='/Etusivu'>Palaa etusivulle</Button></div>
             </div>
         )
     } else {
 
         return (
-            <div>
-                <h1>{kysymykset[0].kysely.nimi}</h1>
-                <h2>{kysymykset[0].kysely.kuvaus}</h2>
-                <p>Tämä on {indeksi + 1} / {kysymykset.length} kysymys</p>
-                <Kysymys kysymys={kysymykset[indeksi]} value={vastaus.syote} handleSubmit={handleSubmit} handleRadionappulaChange={handleRadionappulaChange} handleCheckboxChange={handleCheckboxChange} handleVastausChange={handleVastausChange}></Kysymys>
-
+            <div className={classes.div}>
+                <h1 >{kysymykset[0].kysely.nimi}</h1>
+                <h2 >{kysymykset[0].kysely.kuvaus}</h2>
+                <p >Tämä on {indeksi + 1} / {kysymykset.length} kysymys</p>
+                <Kysymys kysymys={kysymykset[indeksi]} value={vastaus.syote} handleSubmit={handleSubmit} handleRadionappulaChange={handleRadionappulaChange} handleCheckboxChange={handleCheckboxChange} handleVastausChange={handleVastausChange} ></Kysymys>
+            <h2>{virhe}</h2>
             </div>
         )
     }

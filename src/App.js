@@ -46,7 +46,7 @@ function App() {
     return (
       <div>
         <HaeKysely kysely_id={kyselyid}></HaeKysely>
-        <button onClick={() => handleEtusivu()}>palaa etusivulle</button>
+       
       </div>
 
     )

@@ -15,7 +15,7 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
                         type="text"
                         value={value}
                         onChange={handleVastausChange}
-                    ></textarea> <br></br>
+                    ></textarea> <br></br> 
                     <button type="submit">JATKA</button>
                 </form>
             </div >
