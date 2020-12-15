@@ -64,7 +64,7 @@ function HaeKysely(props) {
             setVastauslista(uusiLista)
             saveMonivalintaVastaus(monivalintaVastaus)
             setVirhe('');
-            setMonivalintaVastaus({ checkbox: [], kysymys: {} })
+            setMonivalintaVastaus({ checkbox: [], kysymys: {} });
             handleIndeksi()
            }
            
@@ -94,11 +94,11 @@ function HaeKysely(props) {
     const handleCheckboxChange = (event) => {
         let isChecked = event.target.checked
         if (isChecked) {
-            let lista = monivalintaVastaus.checkbox
+            let lista = [...monivalintaVastaus.checkbox]
             lista.push(event.target.value)
             setMonivalintaVastaus({ checkbox: lista, kysymys: kysymykset[indeksi] })
         } else if (!isChecked) {
-            let lista = monivalintaVastaus.checkbox
+            let lista = [...monivalintaVastaus.checkbox]
             let poistolista = lista.filter(f => f !== event.target.value)
             setMonivalintaVastaus({ checkbox: poistolista, kysymys: kysymykset[indeksi] })
         }
@@ -155,7 +155,7 @@ function HaeKysely(props) {
         axios.post(`http://kyselysovellus.herokuapp.com/kyselyt/${kyselyid}/kysymykset/${monivalintaVastaus.kysymys.kysymys_id}/vastaus`, formData)
             .then(response => {
                 if (response.status === 200) {
-                    setMonivalintaVastaus({ checkbox: '', kysymys: '' });
+                    setMonivalintaVastaus({ checkbox: [], kysymys: '' });
                     setViesti('Lisättiin');
 
                 } else {

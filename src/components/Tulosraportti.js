@@ -11,12 +11,12 @@ import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme } from "victory";
+import { VictoryBar, VictoryChart, VictoryContainer, VictoryPie, VictoryLabel } from "victory";
 
 
 const useStyles = makeStyles((theme) => ({
     Header: {
-        
+
     },
 
     button: {
@@ -33,22 +33,22 @@ const useStyles = makeStyles((theme) => ({
     },
 
     Chart: {
-        maxHeight: 300,
-        maxWidth: 300
+        Height: 300,
+        Width: 300
     },
 
-/*    Kysely: {
-        position: "-webkit-sticky",
-        position: "sticky",
-        top: 0,
-        backgroundColor: "#FFFFFF"
-    },
-*/
+    /*    Kysely: {
+            position: "-webkit-sticky",
+            position: "sticky",
+            top: 0,
+            backgroundColor: "#FFFFFF"
+        },
+    */
     expand: {
         transform: 'rotate(0deg)',
         marginLeft: 'auto',
         transition: theme.transitions.create('transform', {
-          duration: theme.transitions.duration.shortest
+            duration: theme.transitions.duration.shortest
         })
     },
 
@@ -63,7 +63,6 @@ function Tulosraportti(props) {
     const [kysely_id, setKysely_id] = useState(props.kysely_id)
     const [data, setData] = useState([])
     const [expandedId, setExpandedId] = React.useState(-1);
-    const [kysely, setKysely] = useState('');
     let otsikko = 0;
     let i = 0;
 
@@ -81,8 +80,8 @@ function Tulosraportti(props) {
 
         axios.get(kysymys_url)
             .then(response => setKysymyslista(response.data))
-            
-        
+
+
         console.log("LISTA", JSON.stringify(kysymysLista[0]))
         console.log("DATA", data)
     }
@@ -91,162 +90,232 @@ function Tulosraportti(props) {
         setExpandedId(expandedId === index ? -1 : index);
     };
 
-    const mapF = () => {
-        let j = 0;
-        let a = 0;
-        let i = 0;
-        let b = 0;
-        let c = 0;
-        let onko = false;
-        let monivalinta = ({nimi: [], määrä: []});
-        while (i < data.length) {
-            if (data[i].checkbox.length > 0){
-                while (b < data[i].kysymys.monivalinta.length){
-                    monivalinta.nimi.push(data[i].kysymys.monivalinta[b]);
-                    monivalinta.määrä.push(0);
-                    b = b + 1;
+    const mapF = (index) => {
+        if (index === null) {
+            const mappi = new Array();
+            return mappi;
+        } else {
+            let j = 0;
+            let a = 0;
+            let i = 0;
+            let b = 0;
+            let onko = false;
+            let monivalinta = ({ nimi: [], määrä: [] });
+            while (i < data.length) {
+                if (data[i].kysymys.kysymys_id === index) {
+                    if (data[i].checkbox.length > 0) {
+                        while (b < data[i].kysymys.monivalinta.length) {
+                            monivalinta.nimi.push(data[i].kysymys.monivalinta[b]);
+                            monivalinta.määrä.push(0);
+                            b = b + 1;
+                        }
+                    }
+                    while (j < data[i].checkbox.length) {
+                        while (a < monivalinta.nimi.length) {
+                            if (data[i].checkbox[j] === monivalinta.nimi[a]) {
+                                onko = true;
+                                monivalinta.määrä[a] = monivalinta.määrä[a] + 1
+                            }
+                            a = a + 1;
+                        }
+                        if (!onko) {
+                            monivalinta.nimi.push(data[i].checkbox[j]);
+                            monivalinta.määrä.push(1);
+                        }
+                        onko = false;
+                        a = 0;
+                        j = j + 1;
+                    }
+                    j = 0;
                 }
-            }
-        while (j < data[i].checkbox.length){
-            while (a < monivalinta.nimi.length){
-                if (data[i].checkbox[j] === monivalinta.nimi[a]){
-                    onko = true;
-                    monivalinta.määrä[a] = monivalinta.määrä[a] + 1
-                }
-                a = a + 1;
-            }
-            if (!onko){
-                monivalinta.nimi.push(data[i].checkbox[j]);
-                monivalinta.määrä.push(1);
-            }
-            onko = false;
-            a = 0;
-            j = j + 1;
-        }
-        j = 0; 
-        
-        i = i + 1;
-    }
+                i = i + 1;
 
-        const mappi = new Array();
-        for (i = 0; i < monivalinta.nimi.length; i++){
-            var sarake = {nimi: monivalinta.nimi[i], määrä: monivalinta.määrä[i]};
-            mappi.push(sarake);
+            }
+
+            const mappi = new Array();
+            for (i = 0; i < monivalinta.nimi.length; i++) {
+                var sarake = { nimi: monivalinta.nimi[i], määrä: monivalinta.määrä[i] };
+                mappi.push(sarake);
+            }
+            return mappi;
         }
-        return mappi;
     };
 
+    const mapR = (index) => {
+        let a = 0;
+        let i = 0;
+        let onko = false;
+        let monivalinta = ({ nimi: [], määrä: [] });
+        while (i < data.length) {
+            if (data[i].kysymys.kysymys_id === index) {
+                if (data[i].kysymys.tyyppi === "radionappula") {
+                    while (a < monivalinta.nimi.length) {
+                        if (data[i].syote === monivalinta.nimi[a]) {
+                            onko = true;
+                            monivalinta.määrä[a] = monivalinta.määrä[a] + 1
+                        }
+                        a = a + 1;
+                    }
+                    if (!onko) {
+                        monivalinta.nimi.push(data[i].syote);
+                        monivalinta.määrä.push(1);
+                    }
+                    onko = false;
+                    a = 0;
+                }
+            }
+            i = i + 1;
+        }
+
+        const radio = new Array();
+        for (i = 0; i < monivalinta.nimi.length; i++) {
+            var sarake = { x: monivalinta.nimi[i], y: monivalinta.määrä[i] };
+            radio.push(sarake);
+        }
+        return radio;
+    };
 
     return (
         <div>
-           <p></p>
-            
-            
-            <Grid container 
+            <p></p>
+
+
+            <Grid container
                 direction="column"
-                spacing={1} 
+                spacing={1}
                 className={classes.grid}>
-            {kysymysLista.map((kysymys, index) =>
-            <>
-            {otsikko === 0 ? 
-            <Grid item key={ index } className={classes.Kysely}>
-                <h1>{kysymysLista[0].kysely.nimi}</h1>
-                <h2>{kysymysLista[0].kysely.kuvaus}</h2>
-                <h2>vastaukset:</h2>
-                <Button className={classes.button} a href='/Etusivu'>Palaa etusivulle</Button>
-                <span style={{display:'none'}}>{otsikko = 1}</span>
-            </Grid>
-            : 
-            <></>
-            }
-            <Grid item key={ index } className={classes.gridItem}>
-                    
-                <div>
-                    <Card>
-                    <CardHeader className={classes.Header}
-                    title={kysymys.teksti}
-                    />
-                    {data.map((vastaus, indeksi) => {
-                        
-                        
-                        if (vastaus.kysymys.kysymys_id === kysymys.kysymys_id) {
-                            i = i + 1;
-                            if(vastaus.kysymys.tyyppi === "teksti" || vastaus.kysymys.tyyppi === "radionappula") {
-                                return (
-                                    <>
-                                        
-                                        {i === 1 ?
-                                        <IconButton className={classes.Icon}
-                                        className={clsx(classes.expand, {
-                                            [classes.expandOpen]: expandedId === index,
-                                            })}
-                                            onClick={() => handleChange(index)}
-                                            aria-expanded={expandedId === index}
-                                        >
-                                            <ExpandMoreIcon />
-                                        </IconButton>
-                                        :
-                                        <></>
-                                        }
-                                            
-                                        <Collapse in={expandedId === index} >
-                                            
-                                        <CardContent className={classes.content}> 
-                                            <Typography key={indeksi}>{i}: {vastaus.syote}</Typography>
-                                        </CardContent>
-                                        </Collapse>
-                                    </>
-                                )
-                            } else{
-                                return(
-                                    <>
-                                        
-                                        {i === 1 ?
-                                        <IconButton className={classes.Icon}
-                                        className={clsx(classes.expand, {
-                                            [classes.expandOpen]: expandedId === index,
-                                            })}
-                                            onClick={() => handleChange(index)}
-                                            aria-expanded={expandedId === index}
-                                        >
-                                            <ExpandMoreIcon />
-                                        </IconButton>
-                                        :
-                                        <></>
-                                        }
-                                            
-                                        <Collapse in={expandedId === index} >
-                                        {i === 1 ? <CardContent className={classes.content}> 
-                                        <div>
-                                        <VictoryChart domainPadding={20}>
-                                            <VictoryBar  style={{
-                                            data: { fill: "#c43a31" }
-                                            }} data={mapF()} x="nimi" y="määrä" 
-                                            />
-                                        </VictoryChart>
-                                        </div>
-                                        </CardContent>
-                                        :
-                                        <></>
-                                        }
-                                        </Collapse>
-                                    </>
-                                )
-
-                            }
-                           
-
+                {kysymysLista.map((kysymys, index) =>
+                    <>
+                        {otsikko === 0 ?
+                            <Grid item key={index} className={classes.Kysely}>
+                                <h1>{kysymysLista[0].kysely.nimi}</h1>
+                                <h2>{kysymysLista[0].kysely.kuvaus}</h2>
+                                <h2>vastaukset:</h2>
+                                <Button className={classes.button} a href='/Etusivu'>Palaa etusivulle</Button>
+                                <span style={{ display: 'none' }}>{otsikko = 1}</span>
+                            </Grid>
+                            :
+                            <></>
                         }
-                    }
+                        <Grid item key={index} className={classes.gridItem}>
 
-                    )}
-                    </Card>
-                    <span style={{display:'none'}}>{i = 0}</span>
-                </div>
-                </Grid>
-                </>
-            )}
-            
+                            <div>
+                                <Card>
+                                    <CardHeader className={classes.Header}
+                                        title={kysymys.teksti}
+                                    />
+                                    {data.map((vastaus, indeksi) => {
+
+
+                                        if (vastaus.kysymys.kysymys_id === kysymys.kysymys_id) {
+                                            i = i + 1;
+                                            if (vastaus.kysymys.tyyppi === "teksti") {
+                                                return (
+                                                    <>
+
+                                                        {i === 1 ?
+                                                            <IconButton className={classes.Icon}
+                                                                className={clsx(classes.expand, {
+                                                                    [classes.expandOpen]: expandedId === index,
+                                                                })}
+                                                                onClick={() => handleChange(index)}
+                                                                aria-expanded={expandedId === index}
+                                                            >
+                                                                <ExpandMoreIcon />
+                                                            </IconButton>
+                                                            :
+                                                            <></>
+                                                        }
+
+                                                        <Collapse in={expandedId === index} >
+
+                                                            <CardContent className={classes.content}>
+                                                                <Typography key={indeksi}>{i}: {vastaus.syote}</Typography>
+                                                            </CardContent>
+                                                        </Collapse>
+                                                    </>
+                                                )
+                                            } else if (vastaus.kysymys.tyyppi === "radionappula") {
+                                                return (
+                                                    <>
+
+                                                        {i === 1 ?
+                                                            <IconButton className={classes.Icon}
+                                                                className={clsx(classes.expand, {
+                                                                    [classes.expandOpen]: expandedId === index,
+                                                                })}
+                                                                onClick={() => handleChange(index)}
+                                                                aria-expanded={expandedId === index}
+                                                            >
+                                                                <ExpandMoreIcon />
+                                                            </IconButton>
+                                                            :
+                                                            <></>
+                                                        }
+                                                        <Collapse in={expandedId === index} >
+                                                            {i === 1 ? <CardContent className={classes.content}>
+                                                                <div>
+                                                                    <VictoryPie data={mapR(kysymys.kysymys_id)} colorScale="qualitative" domainPadding={20} height={400} width={500} containerComponent={<VictoryContainer responsive={false} />}>
+
+                                                                    </VictoryPie>
+                                                                </div>
+                                                            </CardContent>
+                                                                :
+                                                                <></>
+                                                            }
+                                                        </Collapse>
+                                                    </>
+                                                )
+                                            } else if (kysymys.tyyppi === "checkbox") {
+                                                return (
+                                                    <>
+                                                        {i === 1 ?
+                                                            <IconButton className={classes.Icon}
+                                                                className={clsx(classes.expand, {
+                                                                    [classes.expandOpen]: expandedId === index,
+                                                                })}
+                                                                onClick={() => handleChange(index)}
+                                                                aria-expanded={expandedId === index}
+                                                            >
+                                                                <ExpandMoreIcon />
+                                                            </IconButton>
+                                                            :
+                                                            <></>
+                                                        }
+                                                        <Collapse in={expandedId === index} >
+                                                            {i === 1 ? <CardContent className={classes.content}>
+                                                                <div>
+                                                                    <VictoryChart domainPadding={20} height={400} width={mapF(kysymys.kysymys_id).length * 100} containerComponent={<VictoryContainer responsive={false} />} labelComponent={<VictoryLabel angle={45} />}>
+                                                                        <VictoryBar style={{
+                                                                            data: { fill: "#c43a31" },
+                                                                        }} data={mapF(kysymys.kysymys_id)} x="nimi" y="määrä"
+                                                                        />
+                                                                    </VictoryChart>
+                                                                </div>
+                                                            </CardContent>
+                                                                :
+                                                                <></>
+                                                            }
+                                                        </Collapse>
+                                                    </>
+                                                )
+
+                                            } else {
+
+                                            }
+
+
+                                        }
+                                    }
+
+                                    )}
+                                </Card>
+                                <span style={{ display: 'none' }}>{i = 0}</span>
+                            </div>
+                        </Grid>
+                    </>
+                )}
+
             </Grid>
 
         </div>
@@ -254,12 +323,3 @@ function Tulosraportti(props) {
 }
 
 export default Tulosraportti;
-
-/*
-{vastaus.checkbox.map(valinta => 
-                                        <CardContent className={classes.content}> 
-                                            <Typography>{valinta}</Typography>
-                                        </CardContent>
-                                            )}
-                                            */
-

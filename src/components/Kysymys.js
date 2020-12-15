@@ -1,10 +1,9 @@
 import React from 'react';
 
-// palauttaa yhden kysymyksen
-// kysymyspohja valitaan kysymykselle asetetun tyypin mukaan
 function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleCheckboxChange, handleRadionappulaChange }) {
 
-// kaikki kysymykset form -> lähetetään palvelimelle kun painetaan "Jatka"
+// kaikki kysymykset form -> lähetetään tietokantaan kun painetaan "Jatka"
+
     if (kysymys.tyyppi === "teksti") {
         return (
             <div>
@@ -23,13 +22,13 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
         )
     } else if (kysymys.tyyppi === "checkbox") {
         return (
-            <div>
+            <div name ="checkbox">
                 <form onSubmit={handleSubmit}>
 
                     <p></p>{kysymys.teksti} <br></br>
                     {kysymys.monivalinta.map((m, i) =>
                         <label key={i + 100}>
-                            <input type="checkbox" id={i} name="checkbox" value={m} onClick={handleCheckboxChange}></input>
+                            <input key={m}  type="checkbox" id={i+100} name="checkbox" value={m} onChange={handleCheckboxChange}></input>
                             {m}<br></br>
                         </label>
                     )}
@@ -40,12 +39,12 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
 
     } else if (kysymys.tyyppi === "radionappula") {
         return (
-            <div>
+            <div name = "radio">
                 <form onSubmit={handleSubmit}>
                     <p></p>{kysymys.teksti} <br></br>
                     {kysymys.monivalinta.map((m, i) =>
                         <label key={i}>
-                            <input type="radio" id={m} name="radionappula" value={m} onClick={handleRadionappulaChange}></input>
+                            <input  key={m}  type="radio" id={m} name="radionappula" value={m} onChange={handleRadionappulaChange}></input>
                             {m}<br></br>
                         </label>
                     )}
