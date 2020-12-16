@@ -34,7 +34,7 @@ function HaeKysely(props) {
 
     useEffect(() => { fetchData() }, []);
 
-    let kysymys_url = `http://kyselysovellus.herokuapp.com/kyselyt/${kyselyid}/kysymykset`
+    let kysymys_url = `https://kyselysovellus.herokuapp.com/kyselyt/${kyselyid}/kysymykset`
 
     const fetchData = () => {
         fetch(kysymys_url)
@@ -130,7 +130,7 @@ function HaeKysely(props) {
             'kysymys': vastaus.kysymys,
         }
 
-        axios.post(`http://kyselysovellus.herokuapp.com/kyselyt/${kyselyid}/kysymykset/${vastaus.kysymys.kysymys_id}/vastaus`, formData)
+        axios.post(`https://kyselysovellus.herokuapp.com/kyselyt/${kyselyid}/kysymykset/${vastaus.kysymys.kysymys_id}/vastaus`, formData)
             .then(response => {
                 if (response.status === 200) {
                     setVastaus({ syote: '', kysymys: '' });
@@ -150,7 +150,7 @@ function HaeKysely(props) {
             'kysymys': monivalintaVastaus.kysymys,
         }
 
-        axios.post(`http://kyselysovellus.herokuapp.com/kyselyt/${kyselyid}/kysymykset/${monivalintaVastaus.kysymys.kysymys_id}/vastaus`, formData)
+        axios.post(`https://kyselysovellus.herokuapp.com/kyselyt/${kyselyid}/kysymykset/${monivalintaVastaus.kysymys.kysymys_id}/vastaus`, formData)
             .then(response => {
                 if (response.status === 200) {
                     setMonivalintaVastaus({ checkbox: [], kysymys: '' });

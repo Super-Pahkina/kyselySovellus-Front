@@ -68,8 +68,8 @@ function Tulosraportti(props) {
 
     const [kysymysLista, setKysymyslista] = useState([])
 
-    const vastaus_url = `http://kyselysovellus.herokuapp.com/kyselyt/${kysely_id}/vastaukset`
-    const kysymys_url = `http://kyselysovellus.herokuapp.com/kyselyt/${kysely_id}/kysymykset`
+    const vastaus_url = `https://kyselysovellus.herokuapp.com/kyselyt/${kysely_id}/vastaukset`
+    const kysymys_url = `https://kyselysovellus.herokuapp.com/kyselyt/${kysely_id}/kysymykset`
 
     useEffect(() => { fetchData() }, []);
 

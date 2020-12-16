@@ -49,7 +49,7 @@ function Etusivu({handleVastaa, handleTulokset}){
     const classes = useStyles();
     const [kyselyt, setKyselyt] = useState([])
     const [searchTerm, setSearchTerm] = useState('');
-    let kysely_url = 'http://kyselysovellus.herokuapp.com/kyselyt'
+    let kysely_url = 'https://kyselysovellus.herokuapp.com/kyselyt'
 
     const fetchData = () => {
       fetch(kysely_url)
