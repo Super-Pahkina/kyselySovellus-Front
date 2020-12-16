@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import Slider from '@material-ui/core/Slider';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+
+const useStyles = makeStyles((theme) => ({
+    form: {
+        width: 400,
+    },
+
+}));
 
 function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleCheckboxChange, handleRadionappulaChange, handleSlider }) {
 
-    const [arvo, setArvo] = useState('');
+    const classes = useStyles();
 
     const valit = [
-        {
-          value: 0,
-          label: '0',
-        },
         {
           value: 1,
           label: '1',
@@ -33,11 +38,6 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
       ];
 
 // kaikki kysymykset form -> lähetetään tietokantaan kun painetaan "Jatka"
-      const muutaArvo = (event, newValue) => {
-          setArvo(newValue);
-          console.log(arvo)
-      }
-
     if (kysymys.tyyppi === "teksti") {
         return (
             <div>
@@ -74,7 +74,7 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
     } else if (kysymys.tyyppi === "radionappula") {
         return (
             <div name = "radio">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className={classes.form}>
                     <p></p>{kysymys.teksti} <br></br>
                     {kysymys.monivalinta.map((m, i) =>
                         <label key={i}>
@@ -89,13 +89,15 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
     } else if (kysymys.tyyppi === "skaala") {
         return (
             <div>
+                <Paper style={ {padding:'10px', margin:'30px', width:'600px'} }>
                 <form onSubmit={handleSubmit}>
                     <p></p>{kysymys.teksti} <br></br>
+                    
                     <Slider
                     defaultValue={1}
                     aria-labelledby="discrete-skaala-slider"
                     step={1}
-                    min={0}
+                    min={1}
                     max={5}
                     valueLabelDisplay="auto"
                     marks = {valit}
@@ -103,10 +105,13 @@ function Kysymys({ kysymys, value, handleSubmit, handleVastausChange, handleChec
                     /><br></br> 
                     <button type="submit">JATKA</button>
                 </form>
+                </Paper>
             </div >
 
         )
     }
+
+
 }
 
 export default Kysymys;
