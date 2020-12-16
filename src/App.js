@@ -23,12 +23,6 @@ function App() {
 
   }
 
-  const handleEtusivu = () => {
-    setNakyma("etusivu")
-    setKyselyid('')
-    console.log("HANDLE etusivu", nakyma)
-  }
-
   if (nakyma === "etusivu") {
     return (
       <Etusivu handleVastaa={handleVastaa} handleTulokset={handleTulokset}></Etusivu>
@@ -38,7 +32,7 @@ function App() {
     return (
       <div>
         <Tulosraportti kysely_id={kyselyid}></Tulosraportti>
-        <button onClick={() => handleEtusivu()}>palaa etusivulle</button>
+        
       </div>
     )
 
