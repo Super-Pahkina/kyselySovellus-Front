@@ -169,9 +169,18 @@ function Tulosraportti(props) {
 
         const radio = new Array();
         for (i = 0; i < monivalinta.nimi.length; i++) {
-            var sarake = { x: monivalinta.nimi[i], y: monivalinta.määrä[i] };
+            var nimi = "";
+            console.log("MÄÄRÄ ", monivalinta.määrä[i]) // vastaajien määrä
+            
+            if(monivalinta.määrä[i] > 0) {
+             nimi = monivalinta.nimi[i] + "/ " + monivalinta.määrä[i] + " kpl"
+            } else {
+                nimi = monivalinta.nimi[i]
+            }
+            var sarake = { x: nimi, y: monivalinta.määrä[i] };
             radio.push(sarake);
         }
+    
         return radio;
     };
 
@@ -190,8 +199,9 @@ function Tulosraportti(props) {
                             <Grid item key={index} className={classes.Kysely}>
                                 <h1>{kysymysLista[0].kysely.nimi}</h1>
                                 <h2>{kysymysLista[0].kysely.kuvaus}</h2>
-                                <h2>vastaukset:</h2>
-                                <Button className={classes.button} a href='/Etusivu'>Palaa etusivulle</Button>
+                                <h2>Vastaukset:</h2>
+                                
+                                <Button className={classes.button} a href='/'>Palaa etusivulle</Button>
                                 <span style={{ display: 'none' }}>{otsikko = 1}</span>
                             </Grid>
                             :
@@ -255,7 +265,9 @@ function Tulosraportti(props) {
                                                         <Collapse in={expandedId === index} >
                                                             {i === 1 ? <CardContent className={classes.content}>
                                                                 <div>
-                                                                    <VictoryPie data={mapR(kysymys.kysymys_id)} colorScale="qualitative" domainPadding={20} height={400} width={500} containerComponent={<VictoryContainer responsive={false} />}>
+                                                                    <VictoryPie data={mapR(kysymys.kysymys_id) }
+                                                                     colorScale="qualitative" domainPadding={20} height={400} width={500}
+                                                                      containerComponent={<VictoryContainer responsive={false} />}>
 
                                                                     </VictoryPie>
                                                                 </div>
@@ -285,7 +297,7 @@ function Tulosraportti(props) {
                                                         <Collapse in={expandedId === index} >
                                                             {i === 1 ? <CardContent className={classes.content}>
                                                                 <div>
-                                                                    <VictoryChart domainPadding={20} height={400} width={mapF(kysymys.kysymys_id).length * 100} containerComponent={<VictoryContainer responsive={false} />} labelComponent={<VictoryLabel angle={45} />}>
+                                                                    <VictoryChart domainPadding={20} height={400} width={mapF(kysymys.kysymys_id).length * 120} containerComponent={<VictoryContainer responsive={false} />} labelComponent={<VictoryLabel angle={45} />}>
                                                                         <VictoryBar style={{
                                                                             data: { fill: "#c43a31" },
                                                                         }} data={mapF(kysymys.kysymys_id)} x="nimi" y="määrä"

@@ -20,7 +20,7 @@ const useStyles = makeStyles({
             color: '#FFF'
         }
     }
-        });
+});
 function HaeKysely(props) {
     const classes = useStyles();
     const [kysymykset, setKysymykset] = useState([])
@@ -45,44 +45,42 @@ function HaeKysely(props) {
     const handleSubmit = (event) => {
         event.preventDefault()
         if (kysymykset[indeksi].tyyppi === "teksti") {
-            if(vastaus.syote.length === 0){
+            if (vastaus.syote.length === 0) {
                 setVirhe('Vastaus ei voi olla tyhjä!');
-               
-            }else{
-            const uusiLista = vastauslista.concat(vastaus)
-            setVastauslista(uusiLista)
-            saveVastaus(vastaus)
-            setVirhe('');
-            setVastaus({ syote: '', kysymys: {} })
-            handleIndeksi()
+
+            } else {
+                const uusiLista = vastauslista.concat(vastaus)
+                setVastauslista(uusiLista)
+                saveVastaus(vastaus)
+                setVirhe('');
+                setVastaus({ syote: '', kysymys: {} })
+                handleIndeksi()
             }
         } else if (kysymykset[indeksi].tyyppi === "checkbox") {
-           if(monivalintaVastaus.checkbox.length === 0) {
-            setVirhe('Vastaus ei voi olla tyhjä!');
-           } else {
-            const uusiLista = vastauslista.concat(monivalintaVastaus)
-            setVastauslista(uusiLista)
-            saveMonivalintaVastaus(monivalintaVastaus)
-            setVirhe('');
-            setMonivalintaVastaus({ checkbox: [], kysymys: {} });
-            handleIndeksi()
-           }
-           
-
+            if (monivalintaVastaus.checkbox.length === 0) {
+                setVirhe('Vastaus ei voi olla tyhjä!');
+            } else {
+                const uusiLista = vastauslista.concat(monivalintaVastaus)
+                setVastauslista(uusiLista)
+                saveMonivalintaVastaus(monivalintaVastaus)
+                setVirhe('');
+                setMonivalintaVastaus({ checkbox: [], kysymys: {} });
+                handleIndeksi()
+            }
 
         } else if (kysymykset[indeksi].tyyppi === "radionappula") {
-           if(vastaus.syote.length === 0) {
-            setVirhe('Vastaus ei voi olla tyhjä!');
-           }else{
-            const uusiLista = vastauslista.concat(vastaus)
-            setVastauslista(uusiLista)
-            saveVastaus(vastaus)
-            setVirhe('');
-            setVastaus({ syote: '', kysymys: {} })
-            handleIndeksi()
+            if (vastaus.syote.length === 0) {
+                setVirhe('Vastaus ei voi olla tyhjä!');
+            } else {
+                const uusiLista = vastauslista.concat(vastaus)
+                setVastauslista(uusiLista)
+                saveVastaus(vastaus)
+                setVirhe('');
+                setVastaus({ syote: '', kysymys: {} })
+                handleIndeksi()
+            }
         }
-    }
-        
+
 
     }
 
@@ -195,7 +193,7 @@ function HaeKysely(props) {
 
                     }
 
-                    )} <Button className={classes.button} a href='/Etusivu'>Palaa etusivulle</Button></div>
+                    )} <Button className={classes.button} a href='/'>Palaa etusivulle</Button></div>
             </div>
         )
     } else {
@@ -206,7 +204,7 @@ function HaeKysely(props) {
                 <h2 >{kysymykset[0].kysely.kuvaus}</h2>
                 <p >Tämä on {indeksi + 1} / {kysymykset.length} kysymys</p>
                 <Kysymys kysymys={kysymykset[indeksi]} value={vastaus.syote} handleSubmit={handleSubmit} handleRadionappulaChange={handleRadionappulaChange} handleCheckboxChange={handleCheckboxChange} handleVastausChange={handleVastausChange} ></Kysymys>
-            <h2>{virhe}</h2>
+                <h2>{virhe}</h2>
             </div>
         )
     }

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {  makeStyles } from '@material-ui/core/styles';
 import { Button, CardContent, Typography } from '@material-ui/core';
-import ReactSearchBox from 'react-search-box';
 import Grid from '@material-ui/core/Grid';
-import CardActions from '@material-ui/core/CardActions';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/Card';
 const useStyles = makeStyles({
@@ -57,6 +55,12 @@ function Etusivu({handleVastaa, handleTulokset}){
       fetch(kysely_url)
         .then(Response => Response.json())
         .then(data => setKyselyt(data))
+
+        const result = kyselyt.filter(kysely => kysely.piilotettu !== true)
+        console.log("RESULT", JSON.stringify(result))
+        setKyselyt(result);
+
+
     };
   
     useEffect(() => { fetchData(); }, []);
@@ -81,6 +85,12 @@ function Etusivu({handleVastaa, handleTulokset}){
           }
           
         }).map(kysely =>{
+
+        if(kysely.piilotettu) {
+          return(
+            <div></div>
+          )
+        }  
           
           return(
             
@@ -97,7 +107,9 @@ function Etusivu({handleVastaa, handleTulokset}){
             </Card>
             </Grid>
             
-        )})}
+        )
+        
+        })}
       </Grid> </div>
     )
     
