@@ -44,7 +44,7 @@ function HaeKysely(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        if (kysymykset[indeksi].tyyppi === "teksti") {
+        if (kysymykset[indeksi].tyyppi === "teksti" || kysymykset[indeksi].tyyppi === "skaala") {
             if (vastaus.syote.length === 0) {
                 setVirhe('Vastaus ei voi olla tyhjä!');
 
@@ -84,8 +84,12 @@ function HaeKysely(props) {
 
     }
 
-    const handleVastausChange = (event) => {
-        setVastaus({ syote: event.target.value, kysymys: kysymykset[indeksi] })
+    const handleVastausChange = (event, newValue) => {
+        if (kysymykset[indeksi].tyyppi === "skaala"){
+            setVastaus({ syote: newValue, kysymys: kysymykset[indeksi] })
+        }else{
+            setVastaus({ syote: event.target.value, kysymys: kysymykset[indeksi] })
+        }
         console.log(vastaus)
     }
 
@@ -164,7 +168,8 @@ function HaeKysely(props) {
             })
     }
 
-
+    console.log(indeksi);
+    console.log(kysymykset.length)
     if (indeksi === kysymykset.length) {
         return (
             <div className={classes.div}>
@@ -172,7 +177,7 @@ function HaeKysely(props) {
                 <h3>Vastauksesi</h3>
                 <div>
                     {vastauslista.map((vastaus, i) => {
-                        if (vastaus.kysymys.tyyppi === "teksti" || vastaus.kysymys.tyyppi === "radionappula") {
+                        if (vastaus.kysymys.tyyppi === "teksti" || vastaus.kysymys.tyyppi === "radionappula" || vastaus.kysymys.tyyppi === "skaala") {
                             return (
                                 <div>
                                     <b>{vastaus.kysymys.teksti}</b>
@@ -212,5 +217,3 @@ function HaeKysely(props) {
 }
 
 export default HaeKysely;
-
-

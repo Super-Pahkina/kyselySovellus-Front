@@ -37,13 +37,6 @@ const useStyles = makeStyles((theme) => ({
         Width: 300
     },
 
-    /*    Kysely: {
-            position: "-webkit-sticky",
-            position: "sticky",
-            top: 0,
-            backgroundColor: "#FFFFFF"
-        },
-    */
     expand: {
         transform: 'rotate(0deg)',
         marginLeft: 'auto',
@@ -173,7 +166,50 @@ function Tulosraportti(props) {
             console.log("MÄÄRÄ ", monivalinta.määrä[i]) // vastaajien määrä
             
             if(monivalinta.määrä[i] > 0) {
-             nimi = monivalinta.nimi[i] + "/ " + monivalinta.määrä[i] + " kpl"
+             nimi = monivalinta.nimi[i] + " / " + monivalinta.määrä[i] + " kpl"
+            } else {
+                nimi = monivalinta.nimi[i]
+            }
+            var sarake = { x: nimi, y: monivalinta.määrä[i] };
+            radio.push(sarake);
+        }
+    
+        return radio;
+    };
+
+    const mapS = (index) => {
+        let a = 0;
+        let i = 0;
+        let onko = false;
+        let monivalinta = ({ nimi: [], määrä: [] });
+        while (i < data.length) {
+            if (data[i].kysymys.kysymys_id === index) {
+                if (data[i].kysymys.tyyppi === "skaala") {
+                    while (a < monivalinta.nimi.length) {
+                        if (data[i].syote === monivalinta.nimi[a]) {
+                            onko = true;
+                            monivalinta.määrä[a] = monivalinta.määrä[a] + 1
+                        }
+                        a = a + 1;
+                    }
+                    if (!onko) {
+                        monivalinta.nimi.push(data[i].syote);
+                        monivalinta.määrä.push(1);
+                    }
+                    onko = false;
+                    a = 0;
+                }
+            }
+            i = i + 1;
+        }
+
+        const radio = new Array();
+        for (i = 0; i < monivalinta.nimi.length; i++) {
+            var nimi = "";
+            console.log("MÄÄRÄ ", monivalinta.määrä[i]) // vastaajien määrä
+            
+            if(monivalinta.määrä[i] > 0) {
+             nimi = monivalinta.nimi[i] + " / " + monivalinta.määrä[i] + " kpl"
             } else {
                 nimi = monivalinta.nimi[i]
             }
@@ -264,10 +300,8 @@ function Tulosraportti(props) {
                                                         }
                                                         <Collapse in={expandedId === index} >
                                                             {i === 1 ? <CardContent className={classes.content}>
-                                                                <div>
-                                                                    <VictoryPie data={mapR(kysymys.kysymys_id) }
-                                                                     colorScale="qualitative" domainPadding={20} height={400} width={500}
-                                                                      containerComponent={<VictoryContainer responsive={false} />}>
+                                                                <div className={classes.pie}>
+                                                                    <VictoryPie data={mapR(kysymys.kysymys_id)} colorScale="qualitative"  domainPadding={20} height={400} width={1000} containerComponent={<VictoryContainer responsive={false} />}>
 
                                                                     </VictoryPie>
                                                                 </div>
@@ -312,6 +346,37 @@ function Tulosraportti(props) {
                                                     </>
                                                 )
 
+                                            } else if (vastaus.kysymys.tyyppi === "skaala") {
+                                                return (
+                                                    <>
+
+                                                        {i === 1 ?
+                                                            <IconButton className={classes.Icon}
+                                                                className={clsx(classes.expand, {
+                                                                    [classes.expandOpen]: expandedId === index,
+                                                                })}
+                                                                onClick={() => handleChange(index)}
+                                                                aria-expanded={expandedId === index}
+                                                            >
+                                                                <ExpandMoreIcon />
+                                                            </IconButton>
+                                                            :
+                                                            <></>
+                                                        }
+                                                        <Collapse in={expandedId === index} >
+                                                            {i === 1 ? <CardContent className={classes.content}>
+                                                                <div className={classes.pie}>
+                                                                    <VictoryPie data={mapS(kysymys.kysymys_id)} colorScale="qualitative"  domainPadding={20} height={400} width={1000} containerComponent={<VictoryContainer responsive={false} />}>
+
+                                                                    </VictoryPie>
+                                                                </div>
+                                                            </CardContent>
+                                                                :
+                                                                <></>
+                                                            }
+                                                        </Collapse>
+                                                    </>
+                                                )
                                             } else {
 
                                             }
